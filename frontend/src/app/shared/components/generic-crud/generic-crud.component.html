@@ -1,0 +1,34 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>{{ title() }}</h2>
+        <button class="btn btn-primary" (click)="openForm()">
+            <i class="bi bi-plus-lg me-2"></i>
+            Nova
+        </button>
+    </div>
+
+    <app-generic-filter [fields]="fields()" (filterChange)="onFilterChange($event)">
+    </app-generic-filter>
+
+    <app-generic-table [data]="data()" [columns]="columns()" [meta]="meta()" (pageChange)="onPageChange($event)"
+        (edit)="onEdit($event)" (delete)="onDelete($event)">
+    </app-generic-table>
+
+    @if (showForm) {
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ currentEntity ? 'Editar' : 'Nova' }} {{ title() }}</h5>
+                    <button type="button" class="btn-close" (click)="closeForm()"></button>
+                </div>
+                <div class="modal-body">
+                    <app-generic-form [fields]="fields()" [initialData]="currentEntity || {}" (save)="onSave($event)"
+                        (cancel)="closeForm()">
+                    </app-generic-form>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

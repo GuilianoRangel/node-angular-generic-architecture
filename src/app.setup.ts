@@ -9,6 +9,12 @@ export function setupGlobals(app: INestApplication) {
     );
     app.enableCors();
 
+    // Enable extended query parser for nested objects (filter[field][op]=val)
+    const expressApp = app.getHttpAdapter().getInstance();
+    if (expressApp.set) {
+        expressApp.set('query parser', 'extended');
+    }
+
     const config = new DocumentBuilder()
         .setTitle('Lab CRUD 2')
         .setDescription('The Lab CRUD 2 API description')

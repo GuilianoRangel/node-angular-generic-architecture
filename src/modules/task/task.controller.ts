@@ -24,6 +24,7 @@ export class CreateTaskDto {
     @ApiPropertyOptional({ description: 'Whether the task is completed', default: false })
     @IsOptional()
     @IsBoolean()
+    @Transform(({ value }) => value ?? false)
     completed?: boolean;
 
     @ApiPropertyOptional({ description: 'The UUID of the category', format: 'uuid' })

@@ -1,6 +1,6 @@
 import { FindOptionsWhere, ILike, Equal, MoreThan, LessThan, In, Between } from 'typeorm';
 
-import { IsOptional, IsInt, Min, IsString, IsObject } from 'class-validator';
+import { IsOptional, IsInt, Min, IsString, IsObject, Allow } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class QueryParams {
@@ -21,7 +21,9 @@ export class QueryParams {
     sort?: string; // Ex: 'createdAt:DESC,name:ASC'
 
     @IsOptional()
-    // @IsObject() // validation pipe might struggle with nested query params if not configured
+    @IsObject()
+    @Allow()
+    // @Type(() => Object) // This might be needed if plainToInstance ignores it
     filter?: Record<string, any>; // Ex: { name: 'John', age: { gt: 18 } }
 
     @IsOptional()

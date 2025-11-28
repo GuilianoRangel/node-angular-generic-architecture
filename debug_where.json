@@ -1,0 +1,8 @@
+{
+  "title": {
+    "_type": "equal",
+    "_value": "Test",
+    "_useParameter": true,
+    "_multipleParameters": false
+  }
+}
