@@ -1,0 +1,10 @@
+<div class="card border-0 shadow-sm" style="min-width: 350px;">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Confirmation</h5>
+        <p class="card-text mb-4">{{ data.message }}</p>
+        <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-secondary" (click)="dialogRef.close(false)">Cancel</button>
+            <button class="btn btn-danger" (click)="dialogRef.close(true)">Confirm</button>
+        </div>
+    </div>
+</div>
