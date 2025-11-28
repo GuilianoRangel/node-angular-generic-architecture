@@ -6,6 +6,15 @@ import { authGuard } from './core/auth.guard';
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'tasks', component: TasksComponent, canActivate: [authGuard] },
-    { path: 'tasks-crud', loadComponent: () => import('./features/tasks-crud/tasks-crud.component').then(m => m.TasksCrudComponent), canActivate: [authGuard] },
+    {
+        path: 'tasks-crud',
+        loadComponent: () => import('./features/tasks-crud/tasks-crud.component').then(m => m.TasksCrudComponent),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'categories-crud',
+        loadComponent: () => import('./features/categories-crud/categories-crud.component').then(m => m.CategoriesCrudComponent),
+        canActivate: [authGuard]
+    },
     { path: '', redirectTo: 'tasks', pathMatch: 'full' },
 ];

@@ -19,21 +19,44 @@ import { FieldDefinition } from '../../models/field-definition';
                         </select>
                     </div>
 
-                    @if (selectedField()) {
+                    @if (selectedField(); as field) {
+                        <!-- Operator Selector: Hidden for select/checkbox, Visible for text -->
                         <div class="col-md-2">
-                            <select class="form-select" [(ngModel)]="selectedOperator">
+                            <select class="form-select" [(ngModel)]="selectedOperator" [disabled]="isOperatorFixed()">
                                 <option value="like">Contém</option>
                                 <option value="eq">Igual</option>
                                 <option value="gt">Maior que</option>
                                 <option value="lt">Menor que</option>
                             </select>
                         </div>
+
+                        <!-- Input Area: Changes based on field type -->
                         <div class="col-md-5">
-                            <input type="text" class="form-control" 
-                                [(ngModel)]="filterValue" 
-                                (keyup.enter)="applyFilter()"
-                                placeholder="Valor do filtro...">
+                            @switch (field.type) {
+                                @case ('select') {
+                                    <select class="form-select" [(ngModel)]="filterValue">
+                                        <option [ngValue]="''">Selecione...</option>
+                                        @for (opt of field.options; track opt.value) {
+                                            <option [value]="opt.value">{{ opt.label }}</option>
+                                        }
+                                    </select>
+                                }
+                                @case ('checkbox') {
+                                    <select class="form-select" [(ngModel)]="filterValue">
+                                        <option [ngValue]="''">Todos</option>
+                                        <option [value]="'true'">Sim</option>
+                                        <option [value]="'false'">Não</option>
+                                    </select>
+                                }
+                                @default {
+                                    <input type="text" class="form-control" 
+                                        [(ngModel)]="filterValue" 
+                                        (keyup.enter)="applyFilter()"
+                                        placeholder="Valor do filtro...">
+                                }
+                            }
                         </div>
+
                         <div class="col-md-2 d-flex gap-2">
                             <button class="btn btn-primary w-100" (click)="applyFilter()">
                                 <i class="bi bi-search"></i>
@@ -54,8 +77,6 @@ export class GenericFilterComponent {
     fields = input.required<FieldDefinition[]>();
     filterChange = output<any>();
 
-    // Filter out fields that might not be suitable for simple filtering if needed
-    // For now, use all fields passed
     filterableFields = this.fields;
 
     selectedField = signal<FieldDefinition | null>(null);
@@ -64,7 +85,22 @@ export class GenericFilterComponent {
 
     onFieldChange() {
         this.filterValue.set('');
-        this.selectedOperator.set('like');
+        const field = this.selectedField();
+
+        if (field) {
+            if (field.type === 'select' || field.type === 'checkbox') {
+                this.selectedOperator.set('eq');
+            } else {
+                this.selectedOperator.set('like');
+            }
+        } else {
+            this.selectedOperator.set('like');
+        }
+    }
+
+    isOperatorFixed(): boolean {
+        const field = this.selectedField();
+        return field?.type === 'select' || field?.type === 'checkbox';
     }
 
     applyFilter() {
@@ -72,7 +108,7 @@ export class GenericFilterComponent {
         const value = this.filterValue();
         const op = this.selectedOperator();
 
-        if (field && value) {
+        if (field && value !== '' && value !== null && value !== undefined) {
             const filter = {
                 [field.key]: { [op]: value }
             };
@@ -83,6 +119,6 @@ export class GenericFilterComponent {
     clearFilter() {
         this.selectedField.set(null);
         this.filterValue.set('');
-        this.filterChange.emit(null); // Clear filter
+        this.filterChange.emit(null);
     }
 }

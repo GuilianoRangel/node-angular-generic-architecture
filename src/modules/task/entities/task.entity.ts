@@ -16,7 +16,7 @@ export class Task extends AbstractEntity {
     @Column({ nullable: true })
     categoryId: string;
 
-    @ManyToOne(() => Category, (category) => category.tasks, { nullable: true })
+    @ManyToOne(() => Category, (category) => category.tasks, { nullable: true, onDelete: 'RESTRICT' })
     @JoinColumn({ name: 'categoryId' })
     category: Category;
 }
