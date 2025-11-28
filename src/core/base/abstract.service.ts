@@ -16,6 +16,10 @@ export interface PaginatedResult<T> {
 export abstract class AbstractService<T extends AbstractEntity> {
     protected constructor(protected readonly repository: Repository<T>) { }
 
+    getRepository(): Repository<T> {
+        return this.repository;
+    }
+
     async findAll(query: QueryParams): Promise<PaginatedResult<T>> {
         const { take, skip, order, where } = TypeOrmQueryParser.parse<T>(query);
 

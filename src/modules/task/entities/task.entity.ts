@@ -4,7 +4,7 @@ import { Category } from '../../category/entities/category.entity';
 
 @Entity('tasks')
 export class Task extends AbstractEntity {
-    @Column()
+    @Column({ nullable: false })
     title: string;
 
     @Column({ nullable: true })

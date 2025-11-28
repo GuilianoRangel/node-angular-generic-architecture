@@ -1,4 +1,6 @@
 import { Component, OnInit, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Dialog } from '@angular/cdk/dialog';
+import { ErrorDialogComponent } from '../../shared/components/error-dialog/error-dialog.component';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../../core/services/task.service';
 import { CategoryService } from '../../core/services/category.service';
@@ -75,20 +77,40 @@ export class TasksCrudComponent {
         this.currentTask = null;
     }
 
-    async onSave(data: any) {
-        if (this.currentTask) {
-            this.taskService.update(this.currentTask.id, data).subscribe(() => {
+    private dialog = inject(Dialog);
+
+    onSave(data: any) {
+        const operation = this.currentTask
+            ? this.taskService.update(this.currentTask.id, data)
+            : this.taskService.create(data);
+
+        operation.subscribe({
+            next: () => {
                 this.tasksResource.reload();
-            });
-        } else {
-            this.taskService.create(data).subscribe(() => {
-                this.tasksResource.reload();
-            });
-        }
-        this.closeForm();
+                this.closeForm();
+            },
+            error: (err) => {
+                if (err.error && Array.isArray(err.error.message)) {
+                    const backendErrors = err.error.message;
+                    const fields = this.formFields();
+
+                    const mappedErrors = backendErrors.map((e: any) => {
+                        const fieldDef = fields.find(f => f.key === e.field);
+                        return {
+                            label: fieldDef ? fieldDef.label : e.field,
+                            message: e.message
+                        };
+                    });
+
+                    this.dialog.open(ErrorDialogComponent, {
+                        data: { errors: mappedErrors }
+                    });
+                }
+            }
+        });
     }
 
-    async onDelete(task: Task) {
+    onDelete(task: Task) {
         this.taskService.delete(task.id).subscribe(() => {
             this.tasksResource.reload();
         });
