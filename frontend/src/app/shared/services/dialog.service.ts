@@ -1,18 +1,34 @@
-import { Injectable, inject } from '@angular/core';
-import { Dialog } from '@angular/cdk/dialog';
-import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
-import { firstValueFrom } from 'rxjs';
+import { Injectable } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-    private dialog = inject(Dialog);
 
     async confirm(message: string): Promise<boolean> {
-        const dialogRef = this.dialog.open<boolean>(ConfirmationDialogComponent, {
-            data: { message },
+        const result = await Swal.fire({
+            title: 'Confirmação',
+            html: `
+                <div class="window-body">
+                    <p>${message}</p>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'window-modal',
+                title: 'window-title',
+                confirmButton: 'window-btn-primary',
+                cancelButton: 'window-btn-secondary',
+            },
+            backdrop: 'rgba(0,0,0,0.4)',
+            showCloseButton: true,
+            width: '480px',
+            padding: '0',
+            reverseButtons: true
         });
 
-        const result = await firstValueFrom(dialogRef.closed);
-        return result === true;
+        return result.isConfirmed;
     }
 }
