@@ -11,24 +11,24 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @ApiBearerAuth()
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
-export class UsersController extends AbstractCrudController<User, CreateUserDto, UpdateUserDto>(
-    CreateUserDto,
-    UpdateUserDto,
-    {
-        roles: {
-            create: ['admin'],
-            read: ['admin'],
-            update: ['admin'],
-            delete: ['admin']
-        }
-    }
-) {
-    constructor(private readonly userService: UserService) {
-        super(userService);
-    }
+export class UsersController extends AbstractCrudController<
+  User,
+  CreateUserDto,
+  UpdateUserDto
+>(CreateUserDto, UpdateUserDto, {
+  roles: {
+    create: ['admin'],
+    read: ['admin'],
+    update: ['admin'],
+    delete: ['admin'],
+  },
+}) {
+  constructor(private readonly userService: UserService) {
+    super(userService);
+  }
 
-    @Get('me')
-    async getProfile(@Request() req) {
-        return this.userService.findByUsername(req.user.username);
-    }
+  @Get('me')
+  async getProfile(@Request() req) {
+    return this.userService.findByUsername(req.user.username);
+  }
 }

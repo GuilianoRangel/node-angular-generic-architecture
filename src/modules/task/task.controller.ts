@@ -8,15 +8,16 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 
 @ApiTags('Tasks')
 @Controller('tasks')
-export class TaskController extends AbstractCrudController<Task, CreateTaskDto, UpdateTaskDto>(
-    CreateTaskDto,
-    UpdateTaskDto,
-) {
-    constructor(private readonly taskService: TaskService) {
-        super(taskService);
-    }
+export class TaskController extends AbstractCrudController<
+  Task,
+  CreateTaskDto,
+  UpdateTaskDto
+>(CreateTaskDto, UpdateTaskDto) {
+  constructor(private readonly taskService: TaskService) {
+    super(taskService);
+  }
 
-    /*     @Post()
+  /*     @Post()
         @ApiOperation({ summary: 'Create a new record' })
         @ApiResponse({ status: 201, description: 'The record has been successfully created.' })
         override async create(@Body() createDto: CreateTaskDto) {
@@ -30,4 +31,4 @@ export class TaskController extends AbstractCrudController<Task, CreateTaskDto, 
         override async update(@Param('id') id: string, @Body() updateDto: UpdateTaskDto) {
             return super.update(id, updateDto);
         }*/
-} 
+}

@@ -6,13 +6,19 @@ import { Callback, Context, Handler } from 'aws-lambda';
 
 let cachedServer: Handler;
 
-export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
-    if (!cachedServer) {
-        const app = await NestFactory.create(AppModule, { logger: ['error', 'warn'] });
-        setupGlobals(app);
-        await app.init();
-        const expressApp = app.getHttpAdapter().getInstance();
-        cachedServer = serverlessExpress({ app: expressApp });
-    }
-    return cachedServer(event, context, callback);
+export const handler: Handler = async (
+  event: any,
+  context: Context,
+  callback: Callback,
+) => {
+  if (!cachedServer) {
+    const app = await NestFactory.create(AppModule, {
+      logger: ['error', 'warn'],
+    });
+    setupGlobals(app);
+    await app.init();
+    const expressApp = app.getHttpAdapter().getInstance();
+    cachedServer = serverlessExpress({ app: expressApp });
+  }
+  return cachedServer(event, context, callback);
 };
