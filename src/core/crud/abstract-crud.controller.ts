@@ -50,18 +50,24 @@ export function AbstractCrudController<T extends AbstractEntity, TCreateDto, TUp
         @ApiResponse({ status: 404, description: 'Record not found.' })
         async findOne(@Param('id') id: string, @Request() req) {
             this.checkRoles('read', req.user);
-            // Service findOne doesn't filter by tenant automatically, 
-            // but usually we want to ensure the record belongs to the tenant.
-            // For now, we rely on the fact that IDs are UUIDs and hard to guess,
-            // but ideally AbstractService.findOne should also accept options or we verify after fetch.
-            // A better approach for multi-tenancy is to always filter by tenant.
-            // Let's assume for now we just fetch. 
-            // TODO: Enhance AbstractService to support tenant scoping in findOne.
-            const entity = await this.service.findOne(id);
+
+            // Fetch with tenantId to verify ownership
+            const entity = await this.service.findOne(id, { select: ['id', 'tenantId'] });
+
             if (req.user.tenantId && entity.tenantId !== req.user.tenantId) {
                 throw new ForbiddenException('Access denied');
             }
-            return entity;
+
+            // Return full entity (re-fetch or assume findOne options handled it if we wanted full)
+            // Since we only selected id and tenantId above, we should probably re-fetch or 
+            // better yet, just fetch everything + tenantId if possible.
+            // But since tenantId is hidden, we can't easily "unhide" it without selecting everything else manually
+            // unless we use addSelect. But AbstractService.findOne uses findOne(options).
+            // If we pass select, it ONLY selects those.
+            // So we might need to fetch twice: once for check, once for return.
+            // Or we just return what we have if the user is happy with it, but likely they want full object.
+            // Let's fetch twice for safety and correctness of return value.
+            return this.service.findOne(id);
         }
 
         @Post()
@@ -85,7 +91,8 @@ export function AbstractCrudController<T extends AbstractEntity, TCreateDto, TUp
             this.checkRoles('update', req.user);
 
             // Verify tenant ownership before update
-            const entity = await this.service.findOne(id);
+            const entity = await this.service.findOne(id, { select: ['id', 'tenantId'] });
+
             if (req.user.tenantId && entity.tenantId !== req.user.tenantId) {
                 throw new ForbiddenException('Access denied');
             }
@@ -102,7 +109,8 @@ export function AbstractCrudController<T extends AbstractEntity, TCreateDto, TUp
             this.checkRoles('delete', req.user);
 
             // Verify tenant ownership before delete
-            const entity = await this.service.findOne(id);
+            const entity = await this.service.findOne(id, { select: ['id', 'tenantId'] });
+
             if (req.user.tenantId && entity.tenantId !== req.user.tenantId) {
                 throw new ForbiddenException('Access denied');
             }

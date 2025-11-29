@@ -41,9 +41,9 @@ export abstract class AbstractService<T extends AbstractEntity> {
         };
     }
 
-    async findOne(id: string): Promise<T> {
-        const options: any = { where: { id } };
-        const entity = await this.repository.findOne(options);
+    async findOne(id: string, options: any = {}): Promise<T> {
+        const findOptions: any = { ...options, where: { ...options.where, id } };
+        const entity = await this.repository.findOne(findOptions);
         if (!entity) {
             throw new NotFoundException(`Entity with ID ${id} not found.`);
         }
