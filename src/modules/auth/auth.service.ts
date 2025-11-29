@@ -29,4 +29,10 @@ export class AuthService {
     async register(userDto: any) {
         return this.userService.create(userDto);
     }
+
+    async logout(user: any) {
+        // In a real-world scenario, you might want to invalidate the token here
+        // e.g., by adding it to a blacklist in Redis
+        return { message: 'Logout successful' };
+    }
 }

@@ -26,6 +26,18 @@ export class AuthService {
     }
 
     logout() {
+        this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+            next: () => {
+                this.doLogout();
+            },
+            error: () => {
+                // Even if backend fails, we should logout locally
+                this.doLogout();
+            }
+        });
+    }
+
+    private doLogout() {
         localStorage.removeItem('token');
         this.currentUser.set(null);
         this.router.navigate(['/login']);

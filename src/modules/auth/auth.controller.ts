@@ -1,4 +1,5 @@
 import { Controller, Request, Post, UseGuards, Body } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -19,5 +20,11 @@ export class AuthController {
     @Post('register')
     async register(@Body() req) {
         return this.authService.register(req);
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Post('logout')
+    async logout(@Request() req) {
+        return this.authService.logout(req.user);
     }
 }
