@@ -8,6 +8,11 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/tasks-crud" routerLinkActive="active">Tasks</a>
       </li>
+      @if (authService.hasRole('admin')) {
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/users" routerLinkActive="active">Users</a>
+      </li>
+      }
       @if (authService.currentUser()) {
       <li class="nav-item">
         <a class="nav-link" href="#" (click)="$event.preventDefault(); logout()">Logout</a>

@@ -53,6 +53,7 @@ export class AuthService {
             try {
                 const decoded = jwtDecode(token);
                 this.currentUser.set(decoded);
+                console.log(this.currentUser())
             } catch (e) {
                 this.logout();
             }
@@ -61,5 +62,14 @@ export class AuthService {
 
     isAuthenticated(): boolean {
         return !!this.currentUser();
+    }
+
+    register(user: any) {
+        return this.http.post(`${this.apiUrl}/register`, user);
+    }
+
+    hasRole(role: string): boolean {
+        const user = this.currentUser();
+        return user && user.role === role;
     }
 }

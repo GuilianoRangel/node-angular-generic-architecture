@@ -2,27 +2,32 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
-    selector: 'app-login',
+    selector: 'app-register',
     imports: [CommonModule, ReactiveFormsModule, RouterLink],
-    templateUrl: './login.component.html',
+    templateUrl: './register.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent {
+export class RegisterComponent {
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
+    private router = inject(Router);
 
-    loginForm = this.fb.group({
+    registerForm = this.fb.group({
         username: ['', Validators.required],
         password: ['', Validators.required]
     });
 
     onSubmit() {
-        if (this.loginForm.valid) {
-            this.authService.login(this.loginForm.value).subscribe({
-                error: (err) => alert('Login failed')
+        if (this.registerForm.valid) {
+            this.authService.register(this.registerForm.value).subscribe({
+                next: () => {
+                    alert('Registration successful! Please login.');
+                    this.router.navigate(['/login']);
+                },
+                error: (err) => alert('Registration failed')
             });
         }
     }
