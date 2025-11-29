@@ -53,7 +53,6 @@ export class AuthService {
             try {
                 const decoded = jwtDecode(token);
                 this.currentUser.set(decoded);
-                console.log(this.currentUser())
             } catch (e) {
                 this.logout();
             }

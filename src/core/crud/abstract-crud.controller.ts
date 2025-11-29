@@ -113,8 +113,6 @@ export function AbstractCrudController<T extends AbstractEntity, TCreateDto, TUp
         validateRequiredFields(body: any, isUpdate = false) {
             const repository = this.service.getRepository();
             const metadata = repository.metadata;
-            console.log(metadata);
-            console.log(body);
             const errors: any[] = [];
 
             for (const column of metadata.columns) {

@@ -22,7 +22,6 @@ export class UserService extends AbstractService<User> {
     }
 
     async create(user: DeepPartial<User>): Promise<User> {
-        console.log(user);
         if (user.password) {
             user.password = await bcrypt.hash(user.password, 10);
         }
