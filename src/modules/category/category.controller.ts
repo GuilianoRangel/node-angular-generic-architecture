@@ -3,36 +3,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { AbstractCrudController } from '../../core/crud/abstract-crud.controller';
 import { Category } from './entities/category.entity';
 import { CategoryService } from './category.service';
-
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { MinLength, MaxLength, IsString, IsOptional } from 'class-validator';
-
-export class CreateCategoryDto {
-    @ApiProperty({ description: 'The name of the category', minLength: 2, maxLength: 20 })
-    @IsString()
-    @MinLength(2)
-    @MaxLength(20)
-    name: string;
-
-    @ApiPropertyOptional({ description: 'The description of the category' })
-    @IsOptional()
-    @IsString()
-    description?: string;
-}
-
-export class UpdateCategoryDto {
-    @ApiPropertyOptional({ description: 'The name of the category', minLength: 2, maxLength: 20 })
-    @IsOptional()
-    @IsString()
-    @MinLength(2)
-    @MaxLength(20)
-    name?: string;
-
-    @ApiPropertyOptional({ description: 'The description of the category' })
-    @IsOptional()
-    @IsString()
-    description?: string;
-}
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @ApiTags('Categories')
 @Controller('categories')

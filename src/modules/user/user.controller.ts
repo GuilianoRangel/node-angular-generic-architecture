@@ -4,29 +4,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { AbstractCrudController } from '../../core/crud/abstract-crud.controller';
 import { User } from './entities/user.entity';
-
-import { IsString, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-
-class CreateUserDto {
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    username: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6)
-    password: string;
-
-    @ApiProperty({ required: false, default: 'user' })
-    @IsString()
-    @IsOptional()
-    role?: string;
-}
-
-class UpdateUserDto extends PartialType(CreateUserDto) { }
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth()
