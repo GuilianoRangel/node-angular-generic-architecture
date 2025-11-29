@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@codegenie/serverless-express": "^4.17.0",
-    "@nestjs-query/core": "^0.30.0",
-    "@nestjs-query/query-typeorm": "^0.30.0",
+    "@ptc-org/nestjs-query-core": "^9.2.1",
+    "@ptc-org/nestjs-query-typeorm": "^9.2.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.1",
