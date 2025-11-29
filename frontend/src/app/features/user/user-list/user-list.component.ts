@@ -16,8 +16,7 @@ export class UserListComponent {
     columns: ColumnDefinition[] = [
         { key: 'id', header: 'ID' },
         { key: 'username', header: 'Username' },
-        { key: 'role', header: 'Role' },
-        { key: 'tenantId', header: 'Tenant ID' }
+        { key: 'role', header: 'Role' }
     ];
 
     fields: FieldDefinition[] = [
